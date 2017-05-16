@@ -179,6 +179,7 @@ void keyPressBkspc()
 //Function that releases any key that has been "pressed"
 void releaseKey()
 {
+	delay(10);
 	buf[0] = 0;
 	buf[2] = 0;
 	Serial.write(buf, 8); //Release Key
